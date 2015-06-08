@@ -12,6 +12,7 @@ Note that within the diagrams the 'client' and 'task' components represent the t
 
 #Sink
 Notes:
+
 * It's odd that the sink is initialised when the `FlowDef` is connected and not when the `Flow` is constructed, as is the case with the source.
 * If the flow fails then `rollbackResource()` is invoked instead of `commitResource()`.
 ![Sink](sink.png)
