@@ -34,7 +34,7 @@ seqdiag {
       TupleEntryCollector <- Scheme;  
     task <- TupleEntryCollector;
   
-    client -> Tap [label="commitSinks()", rightnote="if all okay"];
+    client -> Tap [label="commitResource()", rightnote="if all okay"];
     client <- Tap;
     
   client <- Flow;
