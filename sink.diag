@@ -1,5 +1,5 @@
 seqdiag {
-  client; task; FlowConnector; Flow; Tap; Scheme; TupleEntryCollector;
+  client; FlowConnector; Flow; task; Tap; Scheme; TupleEntryCollector;
   
   client -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
@@ -14,28 +14,32 @@ seqdiag {
 
   client -> Flow [label="complete()"];
 
-    client -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
-    client <- Tap;
+    Flow -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
+    Flow <- Tap;
+        
+    Flow -> task [label="<submit jobs>"];
     
-    task -> Tap [label="openForWrite()"];
-      Tap --> TupleEntryCollector [label="<init>"];
-      Tap <-- TupleEntryCollector; 
-    task <- Tap [label="// returns TupleEntryCollector"];
+      task -> Tap [label="openForWrite()"];
+        Tap --> TupleEntryCollector [label="<init>"];
+        Tap <-- TupleEntryCollector; 
+      task <- Tap [label="// returns TupleEntryCollector"];
   
-    task -> TupleEntryCollector [label="add()"];
-      TupleEntryCollector -> Scheme [label="sourcePrepare()", rightnote="if !prepared"];
-      TupleEntryCollector <- Scheme;
-      TupleEntryCollector -> Scheme [label="sink()"];
-      TupleEntryCollector <- Scheme;
-    task <- TupleEntryCollector;
+      task -> TupleEntryCollector [label="add()"];
+        TupleEntryCollector -> Scheme [label="sourcePrepare()", rightnote="if !prepared"];
+        TupleEntryCollector <- Scheme;
+        TupleEntryCollector -> Scheme [label="sink()"];
+        TupleEntryCollector <- Scheme;
+      task <- TupleEntryCollector;
       
-    task -> TupleEntryCollector [label="close()"];
-      TupleEntryCollector -> Scheme [label="sinkCleanUp()"];
-      TupleEntryCollector <- Scheme;  
-    task <- TupleEntryCollector;
+      task -> TupleEntryCollector [label="close()"];
+        TupleEntryCollector -> Scheme [label="sinkCleanUp()"];
+        TupleEntryCollector <- Scheme;  
+      task <- TupleEntryCollector;
+    
+    Flow <- task [label="<all jobs complete>"];
   
-    client -> Tap [label="commitResource()", rightnote="if all okay"];
-    client <- Tap;
+    Flow -> Tap [label="commitResource()", rightnote="if all okay"];
+    Flow <- Tap;
     
   client <- Flow;
 }

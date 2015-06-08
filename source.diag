@@ -1,5 +1,5 @@
 seqdiag {
-  client; task; FlowConnector; Flow; Tap; Scheme; TupleEntryIterator;
+  client; FlowConnector; Flow; task; Tap; Scheme; TupleEntryIterator;
   
   client -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
@@ -10,14 +10,16 @@ seqdiag {
   
   client -> Flow [label="complete()"];
 
-    client -> Tap [label="sourceConfInit()"];
+    Flow -> Tap [label="sourceConfInit()"];
       Tap -> Scheme [label="sourceConfInit()"];
       Tap <- Scheme;
-    client <- Tap;
+    Flow <- Tap;
     
-    client -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
-    client <- Tap;
+    Flow -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
+    Flow <- Tap;
   
+    Flow -> task [label="<submit jobs>"];
+    
       task -> Tap [label="openForRead()"];
         Tap --> TupleEntryIterator [label="<init>"];
           TupleEntryIterator -> Scheme [label="sourcePrepare()"];
@@ -38,6 +40,8 @@ seqdiag {
         TupleEntryIterator -> Scheme [label="sourceCleanUp()"];
         TupleEntryIterator <- Scheme;  
       task <- TupleEntryIterator;
+  
+    Flow <- task [label="<all jobs complete>"];
   
   client <- Flow;
 }
