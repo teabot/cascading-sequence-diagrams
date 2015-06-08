@@ -1,0 +1,40 @@
+seqdiag {
+  client; task; FlowConnector; Flow; Tap; Scheme; TupleEntryIterator;
+  
+  client -> FlowConnector [label="connect()"];
+    FlowConnector --> Flow [label="<init>"];
+      Flow -> Tap [label="flowConfInit()"];
+      Flow <- Tap;
+    FlowConnector <-- Flow;
+  client <- FlowConnector [label="// returns Flow"];  
+  
+  client -> Flow [label="complete()"];
+
+    client -> Tap [label="sourceConfInit()"];
+      Tap -> Scheme [label="sourceConfInit()"];
+      Tap <- Scheme;
+    client <- Tap;
+  
+      task -> Tap [label="openForRead()"];
+        Tap --> TupleEntryIterator [label="<init>"];
+          TupleEntryIterator -> Scheme [label="sourcePrepare()"];
+          TupleEntryIterator <- Scheme;
+        Tap <-- TupleEntryIterator; 
+      task <- Tap [label="// returns TupleEntryIterator"];
+  
+      task -> TupleEntryIterator [label="hasNext()"];
+      task <- TupleEntryIterator [label="// true"];
+      task -> TupleEntryIterator [label="next()"];
+        TupleEntryIterator -> Scheme [label="source()"];
+        TupleEntryIterator <- Scheme [label="// returns a record"];
+      task <- TupleEntryIterator;
+      task -> TupleEntryIterator [label="hasNext()"];
+      task <- TupleEntryIterator [label="// false"];
+  
+      task -> TupleEntryIterator [label="close()"];
+        TupleEntryIterator -> Scheme [label="sourceCleanUp()"];
+        TupleEntryIterator <- Scheme;  
+      task <- TupleEntryIterator;
+  
+  client <- Flow;
+}

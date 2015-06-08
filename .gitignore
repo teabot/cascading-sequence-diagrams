@@ -1,0 +1,30 @@
+# Eclipse files
+.classpath
+.settings
+.project
+.springBeans
+
+# Idea files
+.idea
+*.iml
+
+# Netbeans files
+nbactions.xml
+
+# Maven target folder
+target/
+
+# Eclipse build folder
+bin/
+
+# Any left over .svn folders
+.svn/
+
+# MAC stuff
+.DS_Store
+
+# Backup files
+.\#*
+.*\#
+\#*\#
+*~
