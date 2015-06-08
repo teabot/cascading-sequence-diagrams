@@ -13,7 +13,10 @@ seqdiag {
   client <- FlowConnector [label="// returns Flow"];  
 
   client -> Flow [label="complete()"];
-  
+
+    client -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
+    client <- Tap;
+    
     task -> Tap [label="openForWrite()"];
       Tap --> TupleEntryCollector [label="<init>"];
       Tap <-- TupleEntryCollector; 

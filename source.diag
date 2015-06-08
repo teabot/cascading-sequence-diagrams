@@ -14,6 +14,9 @@ seqdiag {
       Tap -> Scheme [label="sourceConfInit()"];
       Tap <- Scheme;
     client <- Tap;
+    
+    client -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
+    client <- Tap;
   
       task -> Tap [label="openForRead()"];
         Tap --> TupleEntryIterator [label="<init>"];
