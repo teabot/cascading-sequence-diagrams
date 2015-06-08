@@ -1,5 +1,5 @@
 #Overview
-Created with [seqdiag](http://blockdiag.com/en/seqdiag/):
+Created with [seqdiag](http://blockdiag.com/en/seqdiag/).
 
 #Usage
     seqdiag source.diag ; open -a "Preview" source.png
