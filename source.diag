@@ -20,6 +20,8 @@ seqdiag {
   
     Flow -> task [label="<submit jobs>"];
     
+    === Begin cluster side processing ===
+    
       task -> Tap [label="openForRead()"];
         Tap --> TupleEntryIterator [label="<init>"];
           TupleEntryIterator -> Scheme [label="sourcePrepare()"];
@@ -31,8 +33,8 @@ seqdiag {
       task <- TupleEntryIterator [label="// true"];
       task -> TupleEntryIterator [label="next()"];
         TupleEntryIterator -> Scheme [label="source()"];
-        TupleEntryIterator <- Scheme [label="// returns a record"];
-      task <- TupleEntryIterator;
+        TupleEntryIterator <- Scheme [label="// true"];
+      task <- TupleEntryIterator [label="// returns a TupleEntry"];
       task -> TupleEntryIterator [label="hasNext()"];
       task <- TupleEntryIterator [label="// false"];
   
@@ -43,5 +45,7 @@ seqdiag {
   
     Flow <- task [label="<all jobs complete>"];
   
+    === End cluster side processing ===
+    
   client <- Flow;
 }

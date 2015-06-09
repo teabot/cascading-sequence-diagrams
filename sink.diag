@@ -16,6 +16,8 @@ seqdiag {
 
     Flow -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
     Flow <- Tap;
+    
+    === Begin cluster side processing ===
         
     Flow -> task [label="<submit jobs>"];
     
@@ -38,6 +40,8 @@ seqdiag {
     
     Flow <- task [label="<all jobs complete>"];
   
+    === End cluster side processing ===
+    
     Flow -> Tap [label="commitResource()", rightnote="if all okay"];
     Flow <- Tap;
     
