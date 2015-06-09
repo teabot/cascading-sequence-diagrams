@@ -44,6 +44,9 @@ seqdiag {
     
     Flow -> Tap [label="commitResource()", rightnote="if all okay"];
     Flow <- Tap;
+
+    Flow -> Tap [label="rollbackResource()", rightnote="if not okay"];
+    Flow <- Tap;
     
   client <- Flow;
 }
