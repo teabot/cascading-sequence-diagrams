@@ -23,7 +23,5 @@ Notes:
 
 Created by [Elliot West](https://github.com/teabot).
 
-#Legal
+#License
 These diagrams are available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
-
-Copyright 2015 Expedia Inc.
