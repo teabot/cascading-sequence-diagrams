@@ -19,7 +19,7 @@ seqdiag {
     
     === Begin cluster side processing ===
         
-    Flow -> task [label="<submit jobs>"];
+    Flow -> task [diagonal, label="<submit jobs>"];
     
       task -> Tap [label="openForWrite()"];
         Tap --> TupleEntryCollector [label="<init>"];
@@ -38,7 +38,7 @@ seqdiag {
         TupleEntryCollector <- Scheme;  
       task <- TupleEntryCollector;
     
-    Flow <- task [label="<all jobs complete>"];
+    Flow <- task [diagonal, label="<all jobs complete>"];
   
     === End cluster side processing ===
     

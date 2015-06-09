@@ -18,7 +18,7 @@ seqdiag {
     Flow -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
     Flow <- Tap;
   
-    Flow -> task [label="<submit jobs>"];
+    Flow -> task [diagonal, label="<submit jobs>"];
     
     === Begin cluster side processing ===
     
@@ -43,7 +43,7 @@ seqdiag {
         TupleEntryIterator <- Scheme;  
       task <- TupleEntryIterator;
   
-    Flow <- task [label="<all jobs complete>"];
+    Flow <- task [diagonal, label="<all jobs complete>"];
   
     === End cluster side processing ===
     
