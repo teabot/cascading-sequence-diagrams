@@ -28,7 +28,7 @@ seqdiag {
   
       "<task>" -> TupleEntryCollector [label="add()"];
         TupleEntryCollector -> Scheme [label="sinkPrepare()", rightnote="if !prepared"];
-        TupleEntryCollector <- Scheme;
+        TupleEntryCollector <- Scheme [rightnote="prepared = true"];
         TupleEntryCollector -> Scheme [label="sink()"];
         TupleEntryCollector <- Scheme;
       "<task>" <- TupleEntryCollector;
