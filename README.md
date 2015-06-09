@@ -1,4 +1,6 @@
 #Overview
+Sequence diagrams describing the standard life-cycles in Cascading's `Tap` API.
+
 Created with [seqdiag](http://blockdiag.com/en/seqdiag/) and excessive use of `^⌥H` in Eclipse.
 
 Note that within the diagrams the `<client>` and `<task>` components represent the tool and job-task in MapReduce nomenclature. These are considered an abstract boundary point because as Cascading developers we rarely care, understand, or know what these look like internally. They are considered black-boxes, implementing the Cascading runtime on some execution engine but exercising the public `Tap` API in a contractual manner. All other components map to their respective classes within the Cascading API.
@@ -16,3 +18,12 @@ Notes:
 * It's odd that the sink is initialised when the `FlowDef` is connected and not when the `Flow` is constructed, as is the case with the source.
 * If the flow fails then `rollbackResource()` is invoked instead of `commitResource()`.
 ![Sink](sink.png)
+
+#Credits
+
+Created by [Elliot West](https://github.com/teabot).
+
+#Legal
+These diagrams are available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
+
+Copyright 2015 Expedia Inc.
