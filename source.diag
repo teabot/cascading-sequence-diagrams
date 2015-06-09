@@ -1,14 +1,14 @@
 seqdiag {
-  client; FlowConnector; Flow; task; Tap; Scheme; TupleEntryIterator;
+  "<client>"; FlowConnector; Flow; "<task>"; Tap; Scheme; TupleEntryIterator;
   
-  client -> FlowConnector [label="connect()"];
+  "<client>" -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
       Flow -> Tap [label="flowConfInit()"];
       Flow <- Tap;
     FlowConnector <-- Flow;
-  client <- FlowConnector [label="// returns Flow"];  
+  "<client>" <- FlowConnector [label="// returns Flow"];  
   
-  client -> Flow [label="complete()"];
+  "<client>" -> Flow [label="complete()"];
 
     Flow -> Tap [label="sourceConfInit()"];
       Tap -> Scheme [label="sourceConfInit()"];
@@ -18,34 +18,34 @@ seqdiag {
     Flow -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
     Flow <- Tap;
   
-    Flow -> task [diagonal, label="<submit jobs>"];
+    Flow -> "<task>" [diagonal, label="<submit tasks>"];
     
     === Begin cluster side processing ===
     
-      task -> Tap [label="openForRead()"];
+      "<task>" -> Tap [label="openForRead()"];
         Tap --> TupleEntryIterator [label="<init>"];
           TupleEntryIterator -> Scheme [label="sourcePrepare()"];
           TupleEntryIterator <- Scheme;
         Tap <-- TupleEntryIterator; 
-      task <- Tap [label="// returns TupleEntryIterator"];
+      "<task>" <- Tap [label="// returns TupleEntryIterator"];
   
-      task -> TupleEntryIterator [label="hasNext()"];
-      task <- TupleEntryIterator [label="// true"];
-      task -> TupleEntryIterator [label="next()"];
+      "<task>" -> TupleEntryIterator [label="hasNext()"];
+      "<task>" <- TupleEntryIterator [label="// true"];
+      "<task>" -> TupleEntryIterator [label="next()"];
         TupleEntryIterator -> Scheme [label="source()"];
         TupleEntryIterator <- Scheme [label="// true"];
-      task <- TupleEntryIterator [label="// returns a TupleEntry"];
-      task -> TupleEntryIterator [label="hasNext()"];
-      task <- TupleEntryIterator [label="// false"];
+      "<task>" <- TupleEntryIterator [label="// returns a TupleEntry"];
+      "<task>" -> TupleEntryIterator [label="hasNext()"];
+      "<task>" <- TupleEntryIterator [label="// false"];
   
-      task -> TupleEntryIterator [label="close()"];
+      "<task>" -> TupleEntryIterator [label="close()"];
         TupleEntryIterator -> Scheme [label="sourceCleanUp()"];
         TupleEntryIterator <- Scheme;  
-      task <- TupleEntryIterator;
+      "<task>" <- TupleEntryIterator;
   
-    Flow <- task [diagonal, label="<all jobs complete>"];
+    Flow <- "<task>" [diagonal, label="<all tasks complete>"];
   
     === End cluster side processing ===
     
-  client <- Flow;
+  "<client>" <- Flow;
 }

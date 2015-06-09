@@ -1,7 +1,7 @@
 seqdiag {
-  client; FlowConnector; Flow; task; Tap; Scheme; TupleEntryCollector;
+  "<client>"; FlowConnector; Flow; "<task>"; Tap; Scheme; TupleEntryCollector;
   
-  client -> FlowConnector [label="connect()"];
+  "<client>" -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
       Flow -> Tap [label="flowConfInit()"];
       Flow <- Tap;
@@ -10,43 +10,43 @@ seqdiag {
       Tap -> Scheme [label="sinkConfInit()"];
       Tap <- Scheme;
     FlowConnector <- Tap;
-  client <- FlowConnector [label="// returns Flow"];  
+  "<client>" <- FlowConnector [label="// returns Flow"];  
 
-  client -> Flow [label="complete()"];
+  "<client>" -> Flow [label="complete()"];
 
     Flow -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
     Flow <- Tap;
     
     === Begin cluster side processing ===
         
-    Flow -> task [diagonal, label="<submit jobs>"];
+    Flow -> "<task>" [diagonal, label="<submit tasks>"];
     
-      task -> Tap [label="openForWrite()"];
+      "<task>" -> Tap [label="openForWrite()"];
         Tap --> TupleEntryCollector [label="<init>"];
         Tap <-- TupleEntryCollector; 
-      task <- Tap [label="// returns TupleEntryCollector"];
+      "<task>" <- Tap [label="// returns TupleEntryCollector"];
   
-      task -> TupleEntryCollector [label="add()"];
+      "<task>" -> TupleEntryCollector [label="add()"];
         TupleEntryCollector -> Scheme [label="sinkPrepare()", rightnote="if !prepared"];
         TupleEntryCollector <- Scheme;
         TupleEntryCollector -> Scheme [label="sink()"];
         TupleEntryCollector <- Scheme;
-      task <- TupleEntryCollector;
+      "<task>" <- TupleEntryCollector;
       
-      task -> TupleEntryCollector [label="close()"];
+      "<task>" -> TupleEntryCollector [label="close()"];
         TupleEntryCollector -> Scheme [label="sinkCleanUp()"];
         TupleEntryCollector <- Scheme;  
-      task <- TupleEntryCollector;
+      "<task>" <- TupleEntryCollector;
     
-    Flow <- task [diagonal, label="<all jobs complete>"];
+    Flow <- "<task>" [diagonal, label="<all tasks complete>"];
   
     === End cluster side processing ===
     
-    Flow -> Tap [label="commitResource()", rightnote="if all okay"];
+    Flow -> Tap [label="commitResource()", rightnote="on success"];
     Flow <- Tap;
 
-    Flow -> Tap [label="rollbackResource()", rightnote="if not okay"];
+    Flow -> Tap [label="rollbackResource()", rightnote="on failure"];
     Flow <- Tap;
     
-  client <- Flow;
+  "<client>" <- Flow;
 }
