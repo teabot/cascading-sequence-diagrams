@@ -1,10 +1,22 @@
 seqdiag {
-  "<client>"; FlowConnector; Flow; "<task>"; Tap; Scheme; TupleEntryIterator;
+  "<client>"; FlowConnector; Flow; "<platform>"; Tap; Scheme; TupleEntryIterator;
   
   "<client>" -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
+
       Flow -> Tap [label="flowConfInit()"];
       Flow <- Tap;
+
+      Flow -> Tap [label="retrieveSourceFields()"];
+        Tap -> Scheme [label="retrieveSourceFields()"];
+        Tap <- Scheme;
+      Flow <- Tap;
+
+      Flow -> Tap [label="presentSourceFields()"];
+        Tap -> Scheme [label="presentSourceFields()"];
+        Tap <- Scheme;
+      Flow <- Tap;
+      
     FlowConnector <-- Flow;
   "<client>" <- FlowConnector [label="// returns Flow"];  
   
@@ -15,37 +27,37 @@ seqdiag {
       Tap <- Scheme;
     Flow <- Tap;
     
-    Flow -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7,\nI think this\nruns here."];
+    Flow -> Tap [label="prepareResourceForRead()", rightnote="new in 2.7.0."];
     Flow <- Tap;
   
-    Flow -> "<task>" [diagonal, label="<submit tasks>"];
+    Flow -> "<platform>" [diagonal, label="<submit tasks>"];
     
-    === Begin cluster side processing ===
+    === Begin platform side processing ===
     
-      "<task>" -> Tap [label="openForRead()"];
+      "<platform>" -> Tap [label="openForRead()"];
         Tap --> TupleEntryIterator [label="<init>"];
           TupleEntryIterator -> Scheme [label="sourcePrepare()"];
           TupleEntryIterator <- Scheme;
         Tap <-- TupleEntryIterator; 
-      "<task>" <- Tap [label="// returns TupleEntryIterator"];
+      "<platform>" <- Tap [label="// returns TupleEntryIterator"];
   
-      "<task>" -> TupleEntryIterator [label="hasNext()"];
-      "<task>" <- TupleEntryIterator [label="// true"];
-      "<task>" -> TupleEntryIterator [label="next()"];
+      "<platform>" -> TupleEntryIterator [label="hasNext()", rightnote="Called many times."];
+      "<platform>" <- TupleEntryIterator [label="// true"];
+      "<platform>" -> TupleEntryIterator [label="next()", rightnote="Called many times."];
         TupleEntryIterator -> Scheme [label="source()"];
         TupleEntryIterator <- Scheme [label="// true"];
-      "<task>" <- TupleEntryIterator [label="// returns a TupleEntry"];
-      "<task>" -> TupleEntryIterator [label="hasNext()"];
-      "<task>" <- TupleEntryIterator [label="// false"];
+      "<platform>" <- TupleEntryIterator [label="// returns a TupleEntry"];
+      "<platform>" -> TupleEntryIterator [label="hasNext()"];
+      "<platform>" <- TupleEntryIterator [label="// false"];
   
-      "<task>" -> TupleEntryIterator [label="close()"];
+      "<platform>" -> TupleEntryIterator [label="close()"];
         TupleEntryIterator -> Scheme [label="sourceCleanUp()"];
         TupleEntryIterator <- Scheme;  
-      "<task>" <- TupleEntryIterator;
+      "<platform>" <- TupleEntryIterator;
   
-    Flow <- "<task>" [diagonal, label="<all tasks complete>"];
+    Flow <- "<platform>" [diagonal, label="<all tasks complete>"];
   
-    === End cluster side processing ===
+    === End platform side processing ===
     
   "<client>" <- Flow;
 }

@@ -1,10 +1,22 @@
 seqdiag {
-  "<client>"; FlowConnector; Flow; "<task>"; Tap; Scheme; TupleEntryCollector;
+  "<client>"; FlowConnector; Flow; "<platform>"; Tap; Scheme; TupleEntryCollector;
   
   "<client>" -> FlowConnector [label="connect()"];
     FlowConnector --> Flow [label="<init>"];
+    
       Flow -> Tap [label="flowConfInit()"];
       Flow <- Tap;
+      
+      Flow -> Tap [label="retrieveSinkFields()"];
+        Tap -> Scheme [label="retrieveSinkFields()"];
+        Tap <- Scheme;
+      Flow <- Tap;
+      
+      Flow -> Tap [label="presentSinkFields()"];
+        Tap -> Scheme [label="presentSinkFields()"];
+        Tap <- Scheme;
+      Flow <- Tap;
+      
     FlowConnector <-- Flow;
     FlowConnector -> Tap [label="sinkConfInit()"];
       Tap -> Scheme [label="sinkConfInit()"];
@@ -14,33 +26,33 @@ seqdiag {
 
   "<client>" -> Flow [label="complete()"];
 
-    Flow -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7,\nI think this\nruns here."];
+    Flow -> Tap [label="prepareResourceForWrite()", rightnote="new in 2.7.0."];
     Flow <- Tap;
     
-    === Begin cluster side processing ===
+    === Begin platform side processing ===
         
-    Flow -> "<task>" [diagonal, label="<submit tasks>"];
+    Flow -> "<platform>" [diagonal, label="<submit tasks>"];
     
-      "<task>" -> Tap [label="openForWrite()"];
+      "<platform>" -> Tap [label="openForWrite()"];
         Tap --> TupleEntryCollector [label="<init>"];
         Tap <-- TupleEntryCollector; 
-      "<task>" <- Tap [label="// returns TupleEntryCollector"];
+      "<platform>" <- Tap [label="// returns TupleEntryCollector"];
   
-      "<task>" -> TupleEntryCollector [label="add()"];
+      "<platform>" -> TupleEntryCollector [label="add()"];
         TupleEntryCollector -> Scheme [label="sinkPrepare()", rightnote="if !prepared"];
         TupleEntryCollector <- Scheme [rightnote="prepared = true"];
-        TupleEntryCollector -> Scheme [label="sink()"];
+        TupleEntryCollector -> Scheme [label="sink()", rightnote="Called many times."];
         TupleEntryCollector <- Scheme;
-      "<task>" <- TupleEntryCollector;
+      "<platform>" <- TupleEntryCollector;
       
-      "<task>" -> TupleEntryCollector [label="close()"];
+      "<platform>" -> TupleEntryCollector [label="close()"];
         TupleEntryCollector -> Scheme [label="sinkCleanUp()"];
         TupleEntryCollector <- Scheme;  
-      "<task>" <- TupleEntryCollector;
+      "<platform>" <- TupleEntryCollector;
     
-    Flow <- "<task>" [diagonal, label="<all tasks complete>"];
+    Flow <- "<platform>" [diagonal, label="<all tasks complete>"];
   
-    === End cluster side processing ===
+    === End platform side processing ===
     
     Flow -> Tap [label="commitResource()", rightnote="on success"];
     Flow <- Tap;
