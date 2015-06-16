@@ -6,9 +6,8 @@ Analysis was performed against Cascading's Hadoop platform classes for version 2
 Note that within the diagrams the `<client>` and `<platform>` components represent the tool and job-task in MapReduce nomenclature. These are considered an abstract boundary point because as Cascading developers we rarely care, understand, or know what these look like internally. They are considered black-boxes, implementing the Cascading runtime on some execution engine but exercising the public `Tap` API in a contractual manner. All other components map to their respective classes within the Cascading API.
 
 #Usage
-    seqdiag source.diag ; open -a "Preview" source.png
-    seqdiag sink.diag ; open -a "Preview" sink.png 
-
+    ./build.sh
+    
 #Source
 ![Source](source.png)
 
