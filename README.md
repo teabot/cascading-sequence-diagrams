@@ -21,7 +21,7 @@ Notes:
 
 #Credits
 
-Created by [Elliot West](https://github.com/teabot) with thanks to Ken Krugler.
+Created by [Elliot West](https://github.com/teabot) with thanks to Ken Krugler and Koert Kuipers.
 
 #License
 These diagrams are available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
